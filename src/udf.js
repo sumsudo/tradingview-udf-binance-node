@@ -1,22 +1,29 @@
 const Binance = require('./binance')
 
-class UDFError extends Error { }
-class SymbolNotFound extends UDFError { }
-class InvalidResolution extends UDFError { }
+class UDFError extends Error {
+}
+
+class SymbolNotFound extends UDFError {
+}
+
+class InvalidResolution extends UDFError {
+}
 
 class UDF {
     constructor() {
         this.binance = new Binance()
         this.supportedResolutions = ['1', '3', '5', '15', '30', '60', '120', '240', '360', '480', '720', '1D', '3D', '1W', '1M']
 
-        setInterval(() => { this.loadSymbols() }, 30000)
+        setInterval(() => {
+            this.loadSymbols()
+        }, 30000)
         this.loadSymbols()
     }
 
     loadSymbols() {
         function pricescale(symbol) {
             for (let filter of symbol.filters) {
-                if (filter.filterType == 'PRICE_FILTER') {
+                if (filter.filterType === 'PRICE_FILTER') {
                     return Math.round(1 / parseFloat(filter.tickSize))
                 }
             }
@@ -138,7 +145,7 @@ class UDF {
     async symbol(symbol) {
         const symbols = await this.symbols
 
-        const comps = symbol.split(':')
+        const comps = symbol.split('-')
         const s = (comps.length > 1 ? comps[1] : symbol).toUpperCase()
 
         for (const symbol of symbols) {
@@ -230,11 +237,11 @@ class UDF {
         while (true) {
             const klines = await this.binance.klines(symbol, interval, from, to, 500)
             totalKlines = totalKlines.concat(klines)
-            if (klines.length == 500) {
+            if (klines.length === 500) {
                 from = klines[klines.length - 1][0] + 1
             } else {
                 if (totalKlines.length === 0) {
-                    return { s: 'no_data' }
+                    return {s: 'no_data'}
                 } else {
                     return {
                         s: 'ok',
