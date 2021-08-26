@@ -1,4 +1,5 @@
 const Binance = require('./binance')
+const Bitfinex = require('./bitfinex')
 
 class UDFError extends Error {
 }
@@ -12,6 +13,7 @@ class InvalidResolution extends UDFError {
 class UDF {
     constructor() {
         this.binance = new Binance()
+        this.bitfinex = new Bitfinex()
         this.supportedResolutions = ['1', '3', '5', '15', '30', '60', '120', '240', '360', '480', '720', '1D', '3D', '1W', '1M']
 
         setInterval(() => {
@@ -111,6 +113,11 @@ class UDF {
                     value: 'BINANCE',
                     name: 'Binance',
                     desc: 'Binance Exchange'
+                },
+                {
+                    value: 'BITFINEX',
+                    name: 'Bitfinex',
+                    desc: 'Bitfinex Exchange'
                 }
             ],
             symbols_types: [
